@@ -26,8 +26,8 @@ module CardCast
     JSON.mapping(
       name: String,
       code: String,
-      description: String,
-      unlisted: Bool,
+      description: {type: String, default: ""},
+      unlisted: {type: Bool, default: false},
       created_at: {type: Time, converter: Time::Format::ISO_8601_DATE_TIME},
       updated_at: {type: Time, converter: Time::Format::ISO_8601_DATE_TIME},
       external_copyright: Bool,
@@ -36,7 +36,9 @@ module CardCast
       call_count: {type: UInt32, converter: UInt32Converter},
       response_count: {type: UInt32, converter: UInt32Converter},
       author: DeckAuthor,
-      rating: {type: Float32, converter: FloatConverter}
+      rating: {type: Float32, converter: FloatConverter},
+      sample_calls: {type: Array(Card), default: [] of Card},
+      sample_responses: {type: Array(Card), default: [] of Card}
     )
   end
 
@@ -51,6 +53,14 @@ module CardCast
     JSON.mapping(
       calls: Array(Card),
       responses: Array(Card)
+    )
+  end
+
+  struct SearchResults
+    JSON.mapping(
+      count:  UInt32,
+      offset: UInt32,
+      data: Array(DeckInfo)
     )
   end
 end

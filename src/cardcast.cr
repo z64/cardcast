@@ -16,4 +16,26 @@ module CardCast
     response = HTTP::Client.get "#{API_URL}/decks/#{code}/cards"
     Deck.from_json(response.body)
   end
+
+  # Searches for decks based on a search term.
+  # Endpoint is paginated with the `offset` and `limit` arguments.
+  # NOTE: The max `limit` is 50.
+  def self.search(query : String = "", offset = 0, limit = 20)
+    params = HTTP::Params.build do |form|
+      form.add "search", query
+      form.add "offset", offset.to_s
+      form.add "limit", limit.to_s
+    end
+
+    response = HTTP::Client.get "#{API_URL}/decks?#{params}"
+
+    parser = JSON::PullParser.new(response.body)
+
+    results = nil
+    parser.on_key("results") do
+      results = SearchResults.new(parser)
+    end
+
+    results
+  end
 end
