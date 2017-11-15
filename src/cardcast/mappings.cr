@@ -58,7 +58,7 @@ module CardCast
 
   struct SearchResults
     JSON.mapping(
-      count:  UInt32,
+      count: UInt32,
       offset: UInt32,
       data: Array(DeckInfo)
     )
